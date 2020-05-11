@@ -18,7 +18,7 @@ class RedMineClient(ServiceClient):
         self.issue_limit = issue_limit
         self.verify_ssl = verify_ssl
 
-    def find_issues(self, issue_limit=100, only_if_assigned=False):
+    def find_issues(self, issue_limit=100, only_if_assigned=False, statuses=None):
         args = {}
         # TODO: if issue_limit is greater than 100, implement pagination to return all issues.
         # Leave the implementation of this to the unlucky soul with >100 issues assigned to them.
@@ -126,11 +126,11 @@ class RedMineIssue(Issue):
     UNIQUE_KEY = (ID, )
 
     PRIORITY_MAP = {
-        'Low': 'L',
-        'Normal': 'M',
-        'High': 'H',
-        'Urgent': 'H',
-        'Immediate': 'H',
+        'Bassa': 'L',
+        'Normale': 'M',
+        'Alta': 'H',
+        'Urgente': 'H',
+        'Immediata': 'H',
     }
 
     def to_taskwarrior(self):
@@ -185,7 +185,7 @@ class RedMineIssue(Issue):
 
     def get_priority(self):
         return self.PRIORITY_MAP.get(
-            self.record.get('priority', {}).get('Name'),
+            self.record.get('priority', {}).get('name'),
             self.origin['default_priority']
         )
 
