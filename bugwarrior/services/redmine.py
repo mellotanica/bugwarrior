@@ -266,5 +266,7 @@ class RedMineService(IssueService):
         only_if_assigned = self.config.get('only_if_assigned', False)
         issues = self.client.find_issues(self.issue_limit, only_if_assigned)
         log.debug(" Found %i total.", len(issues))
-        for issue in issues:
-            yield self.get_issue_for_record(issue)
+        for record in issues:
+            issue = self.get_issue_for_record(record)
+            issue.update_extra({'annotations': self.build_annotations((), issue.get_issue_url())})
+            yield issue
